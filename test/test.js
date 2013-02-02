@@ -153,7 +153,9 @@ describe("mc-bot-server", function() {
     it("archer", function(done) {
       startBotTest('archer', done);
     });
-    it("helper");
+    it("helper", function(done) {
+      startBotTest('helper', done);
+    });
   });
   it("400 when bad api key", function(done) {
     var request = superagent.post(ENDPOINT + '/create');
