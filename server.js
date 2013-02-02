@@ -3,9 +3,13 @@ var express = require('express')
   , app = express()
   , requireIndex = require('requireindex')
   , path = require('path')
-  , bots = requireIndex(path.join(__dirname, 'lib', 'bots'))
+  , botPlugins = requireIndex(path.join(__dirname, 'lib', 'bots'))
   , env = require('./lib/env')
   , http = require('http')
+  , dict = require('dict')
+
+var bots = dict();
+var MAX_BOT_COUNT = parseInt(env.MAX_BOT_COUNT, 10);
 
 app.configure(function() {
   app.use(function(req, res, next) {
@@ -32,11 +36,36 @@ app.get('/', function(req, res) {
 });
 
 app.post('/create', apiKeyMiddleware, function(req, res) {
-  var bot = bots[req.body.type];
-  if (! bot) {
+  var startBot = botPlugins[req.body.type];
+  if (! startBot) {
     res.send(400, "Invalid bot type");
     return;
   }
+  if (bots.size >= MAX_BOT_COUNT) {
+    res.send(503, "Maximum bot count reached");
+    return;
+  }
+  var bot = startBot({
+    port: req.body.port,
+    host: req.body.host,
+    username: req.body.username,
+    password: req.body.password,
+    owner: req.body.owner,
+  });
+  bot.on('end', function() {
+    bots.delete(bot.id);
+  });
+  bots.set(bot.id, bot);
+  res.send(200, bot.id);
+});
+
+app.post('/destroy', apiKeyMiddleware, function(req, res) {
+  var bot = bots.get(req.body.id);
+  if (! bot) {
+    res.send(404, "Bot not found");
+    return;
+  }
+  bot.end();
   res.send(200, "OK");
 });
 

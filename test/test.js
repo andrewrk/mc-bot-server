@@ -10,6 +10,7 @@ var spawn = require('child_process').spawn
 
 var ENDPOINT = 'http://' + env.HOST + ':' + env.PORT;
 var VALID_API_KEY = env.API_KEY;
+env.MAX_BOT_COUNT = 1;
 
 describe("bootup", function() {
   before(function(done) {
@@ -90,7 +91,9 @@ describe("mc-bot-server", function() {
   before(function(done) {
     var exe = spawn("./node_modules/.bin/naught", ["stop"]);
     exe.on('exit', function() {
-      var exe = spawn("./node_modules/.bin/naught", ["start", "server.js"]);
+      var exe = spawn("./node_modules/.bin/naught", ["start", "server.js"], {
+        env: env,
+      });
       exe.on('exit', function() { done(); });
     });
   });
@@ -104,29 +107,63 @@ describe("mc-bot-server", function() {
       batch.end(done);
     });
   });
-  describe("starting bots", function() {
-    var server;
-    beforeEach(function(done) {
-      server = mc.createServer({
-        'online-mode': false
+  var server;
+  beforeEach(function(done) {
+    server = mc.createServer({
+      'online-mode': false
+    });
+    server.on('listening', done);
+  });
+  afterEach(function(done) {
+    server.on('close', done);
+    server.close();
+    server = null;
+  });
+  function startBotTest(type, done) {
+    var id;
+    server.once('login', function(client) {
+      assert.ok(client.username === 'test1234');
+      var request = superagent.post(ENDPOINT + '/destroy');
+      request.send({
+        apiKey: VALID_API_KEY,
+        id: id,
       });
-      server.on('listening', done);
+      request.end(function (err, resp) {
+        assert.ifError(err);
+        assert.ok(resp.ok, "/destroy " + resp.status + " " + resp.text);
+        done();
+      });
     });
-    afterEach(function(done) {
-      server.on('close', done);
-      server.close();
+    var request = superagent.post(ENDPOINT + '/create');
+    request.send({
+      apiKey: VALID_API_KEY,
+      type: type,
+      username: 'test1234',
+      host: 'localhost',
+      port: '25565',
+      owner: 'superjoe30',
     });
+    request.end(function(err, resp) {
+      assert.ifError(err);
+      assert.ok(resp.ok, "/create " + resp.status + " " + resp.text);
+      id = resp.text;
+    });
+  }
+  describe("starting bots", function() {
     it("archer", function(done) {
       startBotTest('archer', done);
     });
     it("helper");
   });
-  it("limits bot count");
   it("400 when bad api key", function(done) {
     var request = superagent.post(ENDPOINT + '/create');
     request.send({
       apiKey: "invalid api key",
       type: 'archer',
+      username: 'test1234',
+      host: 'localhost',
+      port: '25565',
+      owner: 'superjoe30',
     });
     request.end(function(err, resp) {
       assert.ifError(err);
@@ -134,17 +171,39 @@ describe("mc-bot-server", function() {
       done();
     });
   });
+  it("limits bot count", function(done) {
+    var request = superagent.post(ENDPOINT + '/create');
+    request.send({
+      apiKey: VALID_API_KEY,
+      type: 'archer',
+      username: 'test1234',
+      host: 'localhost',
+      port: '25565',
+      owner: 'superjoe30',
+    });
+    request.end(function(err, resp) {
+      assert.ifError(err);
+      assert.strictEqual(resp.status, 200, "/create " + resp.status + " " + resp.text);
+      var id = resp.text;
+      var request = superagent.post(ENDPOINT + '/create');
+      request.send({
+        apiKey: VALID_API_KEY,
+        type: 'archer',
+      });
+      request.end(function(err, resp) {
+        assert.ifError(err);
+        assert.strictEqual(resp.status, 503);
+        var request = superagent.post(ENDPOINT + '/destroy');
+        request.send({
+          apiKey: VALID_API_KEY,
+          id: id,
+        });
+        request.end(function(err, resp) {
+          assert.ifError(err);
+          assert.strictEqual(resp.status, 200, "/destroy " + resp.status + " " + resp.text);
+          done();
+        });
+      });
+    });
+  });
 });
-
-function startBotTest(type, done) {
-  var request = superagent.post(ENDPOINT + '/create');
-  request.send({
-    apiKey: VALID_API_KEY,
-    type: type,
-  });
-  request.end(function(err, resp) {
-    assert.ifError(err);
-    assert.ok(resp.ok, "/create " + resp.status + " " + resp.text);
-    done();
-  });
-}
