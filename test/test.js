@@ -49,6 +49,12 @@ describe("bootup", function() {
       done();
     });
   });
+  it("lists bot types", function(done) {
+    http.get(url.parse(ENDPOINT + "/list"), function(resp) {
+      assert.strictEqual(resp.statusCode, 200);
+      done();
+    });
+  });
   it("deploys code", function(done) {
     var exe = spawn("./node_modules/.bin/naught", ["deploy"], {
       stdio: 'pipe'

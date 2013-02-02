@@ -35,6 +35,10 @@ app.get('/', function(req, res) {
   res.send(200, "OK");
 });
 
+app.get('/list', function(req, res) {
+  res.send(200, Object.keys(botPlugins));
+});
+
 app.post('/create', apiKeyMiddleware, function(req, res) {
   var startBot = botPlugins[req.body.type];
   if (! startBot) {
