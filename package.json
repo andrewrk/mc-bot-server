@@ -1,0 +1,8 @@
+{
+  "name": "mc-bot-server",
+  "version": "0.0.0",
+  "description": "start a minecraft bot",
+  "main": "index.js",
+  "author": "Andrew Kelley <superjoe30@gmail.com>",
+  "license": "BSD"
+}
