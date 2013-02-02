@@ -7,29 +7,31 @@ var express = require('express')
   , env = require('./lib/env')
   , http = require('http')
 
-app.use(function(req, res, next) {
-  if (toobusy()) {
-    res.send(503, "Too busy");
-  } else {
-    next();
-  }
+app.configure(function() {
+  app.use(function(req, res, next) {
+    if (toobusy()) {
+      res.send(503, "Too busy");
+    } else {
+      next();
+    }
+  });
+  app.use(express.json());
+  app.use(app.router);
 });
 
-app.get('/', function(req, res) {
-  res.send(200, "OK");
-});
-
-app.use(express.json());
-
-app.use(function(req, res, next) {
+function apiKeyMiddleware(req, res, next) {
   if (req.body.apiKey === env.API_KEY) {
     next();
   } else {
     res.send(400, "Bad API key");
   }
+}
+
+app.get('/', function(req, res) {
+  res.send(200, "OK");
 });
 
-app.post('/create', function(req, res) {
+app.post('/create', apiKeyMiddleware, function(req, res) {
   var bot = bots[req.body.type];
   if (! bot) {
     res.send(400, "Invalid bot type");

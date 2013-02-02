@@ -20,6 +20,7 @@
   "devDependencies": {
     "mocha": "~1.7.4",
     "minecraft-protocol": "~0.7.0",
+    "superagent": "~0.10.0",
     "batch": "~0.2.1"
   }
 }

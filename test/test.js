@@ -6,6 +6,7 @@ var spawn = require('child_process').spawn
   , url = require('url')
   , http = require('http')
   , assert = require('assert')
+  , superagent = require('superagent')
 
 var ENDPOINT = 'http://' + env.HOST + ':' + env.PORT;
 var VALID_API_KEY = env.API_KEY;
@@ -106,14 +107,44 @@ describe("mc-bot-server", function() {
   describe("starting bots", function() {
     var server;
     beforeEach(function(done) {
-      server = mc.createServer();
+      server = mc.createServer({
+        'online-mode': false
+      });
+      server.on('listening', done);
     });
     afterEach(function(done) {
       server.on('close', done);
       server.close();
     });
-    it("archer");
+    it("archer", function(done) {
+      startBotTest('archer', done);
+    });
     it("helper");
   });
   it("limits bot count");
+  it("400 when bad api key", function(done) {
+    var request = superagent.post(ENDPOINT + '/create');
+    request.send({
+      apiKey: "invalid api key",
+      type: 'archer',
+    });
+    request.end(function(err, resp) {
+      assert.ifError(err);
+      assert.strictEqual(resp.status, 400);
+      done();
+    });
+  });
 });
+
+function startBotTest(type, done) {
+  var request = superagent.post(ENDPOINT + '/create');
+  request.send({
+    apiKey: VALID_API_KEY,
+    type: type,
+  });
+  request.end(function(err, resp) {
+    assert.ifError(err);
+    assert.ok(resp.ok, "/create " + resp.status + " " + resp.text);
+    done();
+  });
+}
