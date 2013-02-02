@@ -2,7 +2,15 @@
   "name": "mc-bot-server",
   "version": "0.0.0",
   "description": "start a minecraft bot",
-  "main": "index.js",
   "author": "Andrew Kelley <superjoe30@gmail.com>",
-  "license": "BSD"
+  "license": "BSD",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "~3.1.0",
+    "archerbot": "0.0.2",
+    "helperbot": "0.0.0",
+    "toobusy": "~0.2.2"
+  }
 }
