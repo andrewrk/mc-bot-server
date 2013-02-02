@@ -4,12 +4,8 @@ var express = require('express')
   , requireIndex = require('requireindex')
   , path = require('path')
   , bots = requireIndex(path.join(__dirname, 'lib', 'bots'))
-
-var env = {
-  PORT: process.env.PORT || 11476,
-  HOST: process.env.HOST || '0.0.0.0',
-  API_KEY: process.env.API_KEY || '43959b30-6cd8-11e2-bcfd-0800200c9a66',
-};
+  , env = require('./lib/env')
+  , http = require('http')
 
 app.use(function(req, res, next) {
   if (toobusy()) {
@@ -17,6 +13,10 @@ app.use(function(req, res, next) {
   } else {
     next();
   }
+});
+
+app.get('/', function(req, res) {
+  res.send(200, "OK");
 });
 
 app.use(express.json());
@@ -38,3 +38,12 @@ app.post('/create', function(req, res) {
   res.send(200, "OK");
 });
 
+var server = http.createServer(app);
+server.listen(env.PORT, env.HOST, function() {
+  console.info("Listening at http://" + env.HOST + ":" + env.PORT);
+  if (process.send) process.send('online');
+});
+
+process.on('message', function(message) {
+  if (message === 'shutdown') process.exit(0);
+});

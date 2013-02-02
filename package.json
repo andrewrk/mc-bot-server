@@ -5,12 +5,21 @@
   "author": "Andrew Kelley <superjoe30@gmail.com>",
   "license": "BSD",
   "scripts": {
-    "start": "node server.js"
+    "start": "naught start server.js",
+    "stop": "naught stop",
+    "test": "mocha --reporter spec"
   },
   "dependencies": {
     "express": "~3.1.0",
+    "requireindex": "~1.0.0",
     "archerbot": "0.0.2",
     "helperbot": "0.0.0",
+    "naught": "~0.4.1",
     "toobusy": "~0.2.2"
+  },
+  "devDependencies": {
+    "mocha": "~1.7.4",
+    "minecraft-protocol": "~0.7.0",
+    "batch": "~0.2.1"
   }
 }
