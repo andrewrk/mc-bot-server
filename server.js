@@ -71,6 +71,7 @@ app.post('/destroy', apiKeyMiddleware, function(req, res) {
     res.send(404, "Bot not found");
     return;
   }
+  console.info("destroying bot", bot.id);
   bot.end();
   res.send(200, "OK");
 });
