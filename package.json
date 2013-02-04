@@ -1,8 +1,12 @@
 {
   "name": "mc-bot-server",
   "version": "0.0.0",
-  "description": "start a minecraft bot",
+  "description": "remotely start a minecraft bot",
   "author": "Andrew Kelley <superjoe30@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/superjoe30/mc-bot-server.git"
+  },
   "license": "BSD",
   "scripts": {
     "start": "naught start server.js",
