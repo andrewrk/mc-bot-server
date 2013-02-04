@@ -8,6 +8,8 @@ var express = require('express')
   , http = require('http')
   , dict = require('dict')
 
+console.info("env", env);
+
 var bots = dict();
 var MAX_BOT_COUNT = parseInt(env.MAX_BOT_COUNT, 10);
 
