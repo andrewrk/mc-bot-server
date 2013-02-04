@@ -6,6 +6,7 @@ start a minecraft bot remotely
 
 ### Creating Bots
 
+```
 POST /create 
 Content-Type: application/json
 {
@@ -17,14 +18,17 @@ Content-Type: application/json
   password: "optional password",
   owner: "username who started the bot"
 }
+```
 
 Returns an ID that you can pass to /destroy
 
 ### Destroying Bots
 
+```
 POST /destroy
 Content-Type: application/json
 {
   apiKey: "valid api key",
   id: "bot id to destroy"
 }
+```
