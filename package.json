@@ -12,16 +12,17 @@
   "dependencies": {
     "express": "~3.1.0",
     "requireindex": "~1.0.0",
-    "archerbot": "0.0.3",
-    "helperbot": "0.0.0",
+    "archerbot": "0.0.4",
+    "helperbot": "0.0.1",
     "naught": "~0.4.1",
     "toobusy": "~0.2.2",
     "dict": "~1.2.0",
-    "node-uuid": "~1.4.0"
+    "node-uuid": "~1.4.0",
+    "rbot": "0.0.4"
   },
   "devDependencies": {
     "mocha": "~1.7.4",
-    "minecraft-protocol": "~0.7.0",
+    "minecraft-protocol": "~0.7.6",
     "superagent": "~0.10.0",
     "batch": "~0.2.1"
   }
