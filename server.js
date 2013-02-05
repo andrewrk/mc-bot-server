@@ -60,9 +60,9 @@ app.post('/create', apiKeyMiddleware, function(req, res) {
     owner: req.body.owner,
   });
   bot.on('end', function() {
+    bots.delete(bot.id);
     console.info("bot '" + req.body.username + "'ended. owner:",
       req.body.owner, " slots:", bots.size +  "/" + MAX_BOT_COUNT);
-    bots.delete(bot.id);
   });
   bots.set(bot.id, bot);
   res.send(200, bot.id);
