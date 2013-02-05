@@ -48,6 +48,7 @@ app.post('/create', apiKeyMiddleware, function(req, res) {
     return;
   }
   if (bots.size >= MAX_BOT_COUNT) {
+    console.warn("not starting bot:", bots.size, "/", MAX_BOT_COUNT, "bots running");
     res.send(503, "Maximum bot count reached");
     return;
   }
@@ -59,6 +60,8 @@ app.post('/create', apiKeyMiddleware, function(req, res) {
     owner: req.body.owner,
   });
   bot.on('end', function() {
+    console.info("bot '" + req.body.username + "'ended. owner:",
+      req.body.owner, " slots:", bots.size +  "/" + MAX_BOT_COUNT);
     bots.delete(bot.id);
   });
   bots.set(bot.id, bot);
