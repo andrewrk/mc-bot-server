@@ -52,6 +52,10 @@ app.post('/create', apiKeyMiddleware, function(req, res) {
     res.send(503, "Maximum bot count reached");
     return;
   }
+  if (! isValidBotName(req.body.username)) {
+    res.send(400, "Invalid bot username");
+    return;
+  }
   var bot = startBot({
     port: req.body.port,
     host: req.body.host,
@@ -88,3 +92,8 @@ server.listen(env.PORT, env.HOST, function() {
 process.on('message', function(message) {
   if (message === 'shutdown') process.exit(0);
 });
+
+var validBotNameRe = /^[a-zA-Z0-9]{1,20}$/;
+function isValidBotName(botName) {
+  return validBotNameRe.test(botName);
+}
