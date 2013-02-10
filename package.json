@@ -17,7 +17,7 @@
     "express": "~3.1.0",
     "requireindex": "~1.0.0",
     "archerbot": "0.0.5",
-    "helperbot": "0.0.4",
+    "helperbot": "0.0.5",
     "naught": "~0.4.1",
     "toobusy": "~0.2.2",
     "dict": "~1.2.0",
