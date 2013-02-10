@@ -16,7 +16,7 @@
   "dependencies": {
     "express": "~3.1.0",
     "requireindex": "~1.0.0",
-    "archerbot": "0.0.5",
+    "archerbot": "0.0.6",
     "helperbot": "0.0.5",
     "naught": "~0.4.1",
     "toobusy": "~0.2.2",
