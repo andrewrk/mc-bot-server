@@ -17,7 +17,7 @@
     "express": "~3.1.0",
     "requireindex": "~1.0.0",
     "archerbot": "0.0.6",
-    "helperbot": "git://github.com/Darthfett/helperbot.git#00df6c0b",
+    "helperbot": "git://github.com/Darthfett/helperbot.git#0b135d5c67",
     "naught": "~0.4.1",
     "toobusy": "~0.2.2",
     "dict": "~1.2.0",
