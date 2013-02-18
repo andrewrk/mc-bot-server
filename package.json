@@ -22,7 +22,7 @@
     "toobusy": "~0.2.2",
     "dict": "~1.2.0",
     "node-uuid": "~1.4.0",
-    "rbot": "0.0.8"
+    "rbot": "0.0.9"
   },
   "devDependencies": {
     "mocha": "~1.7.4",
